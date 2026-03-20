@@ -4,17 +4,24 @@
 
 This is a collection of useful scripts to help you manage your Actual Budget.
 
-- [Requirements](#requirements)
-- [Configuration](#configuration)
-- [Installation](#installation)
-- Scripts:
+- [Actual Budget Helper Scripts](#actual-budget-helper-scripts)
+  - [Requirements](#requirements)
+  - [Configuration](#configuration)
+    - [OIDC Auth Provider Support](#oidc-auth-provider-support)
+  - [Installation](#installation)
+    - [Using Docker Image](#using-docker-image)
+    - [Using Docker Compose](#using-docker-compose)
+    - [Building Docker Image](#building-docker-image)
+  - [Scripts](#scripts)
     - [Sync Remote Banks](#sync-remote-banks)
+    - [Auto Sync Tagged Banks](#auto-sync-tagged-banks)
     - [Loan Interest Calculator](#loan-interest-calculator)
-    - [Tracking Home Prices (RentCast's Value Estimate)](#tracking-home-prices-rentcasts-value-estimate)
+    - [Tracking Home Prices (RentCast's value estimate)](#tracking-home-prices-rentcasts-value-estimate)
     - [Tracking Home Prices (Zillow's Zestimate)](#tracking-home-prices-zillows-zestimate)
     - [Tracking Vehicle Prices (Kelley Blue Book)](#tracking-vehicle-prices-kelley-blue-book)
     - [Tracking Investment Accounts](#tracking-investment-accounts)
     - [Tracking Bitcoin Price](#tracking-bitcoin-price)
+    - [Tracking Crypto Prices](#tracking-crypto-prices)
 
 ## Requirements
 
@@ -163,6 +170,40 @@ node sync-banks.js
 ```
 
 It is recommended to run this script once per day or week.
+
+### Auto Sync Tagged Banks
+
+This script selectively syncs only the remote banks that have been tagged with
+`#AutoSync` in their account notes. This is useful when you want to sync
+some accounts more frequently than others, or when you want to avoid syncing
+certain accounts that may have issues or don't need frequent updates.
+
+Unlike `sync-banks.js` which syncs all connected accounts, this script gives
+you granular control over which accounts are synced during each run.
+
+To use this script, edit the account notes for each account you want to
+automatically sync and add the tag `#AutoSync` anywhere in the notes.
+
+For example, if you have checking and savings accounts that you want to sync
+daily, but credit card accounts that only need weekly syncing, you can:
+1. Add `#AutoSync` to the notes of your checking and savings accounts
+2. Schedule `auto-sync-banks.js` to run daily
+3. Schedule `sync-banks.js` to run weekly for all accounts
+
+To run:
+
+```console
+node auto-sync-banks.js
+```
+
+The script will:
+- Check all accounts for the `#AutoSync` tag
+- Sync only the tagged accounts via GoCardless/SimpleFIN
+- Display progress and any errors for each account
+- Show a summary of how many accounts were synced
+
+It is recommended to run this script on whatever frequency makes sense for your
+tagged accounts.
 
 ### Loan Interest Calculator
 

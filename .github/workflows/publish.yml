@@ -2,7 +2,9 @@ name: Create and publish Docker image on GHCR
 
 on:
   push:
-    branches: ['main']
+    branches: 
+      - 'main'
+      - 'feature/*'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -42,6 +44,8 @@ jobs:
           tags: |
             # set latest tag for default branch
             type=raw,value=latest,enable={{is_default_branch}}
+            # set feature tag for feature branches (extracts name after feature/)
+            type=match,pattern=feature/(.*),group=1
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
