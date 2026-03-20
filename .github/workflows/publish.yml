@@ -44,8 +44,8 @@ jobs:
           tags: |
             # set latest tag for default branch
             type=raw,value=latest,enable={{is_default_branch}}
-            # set feature tag for feature branches (extracts name after feature/)
-            type=match,pattern=feature/(.*),group=1
+            # set branch name as tag for feature branches
+            type=ref,event=branch,enable=true
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
